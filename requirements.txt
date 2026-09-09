@@ -1,0 +1,5 @@
+torch
+pygame-ce
+mss
+numpy
+pyautogui

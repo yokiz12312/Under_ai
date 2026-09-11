@@ -1,8 +1,10 @@
 import pygame as pg
 import random 
+import socket
 
 pg.init()
-
+ai_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+ai_address = ("127.0.0.1", 5000)
 
 screen = pg.display.set_mode((800, 600))
 pg.display.set_caption("YO_BATTLE")
@@ -46,6 +48,8 @@ while running:
 
 
     if hp <= 0:
+        ai_socket.sendto(b"DEATH", ai_address)
+
         restarts += 1
         player, hp, bullets = reset_game()
 
@@ -93,6 +97,9 @@ while running:
             if player.colliderect(bullet) and now - last_hit >= 500:
                 hp -= 1
                 last_hit = now
+
+                ai_socket.sendto(b"HIT", ai_address)
+                
             bullet.y = 150
             bullet.x = random.randint(battle_area.left, battle_area.right - bullet.width)
 
